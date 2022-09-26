@@ -2,6 +2,7 @@ package com.brovko.notificationservice.service;
 
 import com.brovko.notificationservice.model.EmailDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,6 +17,7 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender javaMailSender;
@@ -25,6 +27,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public String sendSimpleMail(EmailDetails details) {
         try {
+            log.info("{}",details);
 
             SimpleMailMessage mailMessage
                     = new SimpleMailMessage();
