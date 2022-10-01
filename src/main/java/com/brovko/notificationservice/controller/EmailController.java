@@ -1,8 +1,10 @@
 package com.brovko.notificationservice.controller;
 
+import com.brovko.notificationservice.messaging.Constants;
 import com.brovko.notificationservice.model.EmailDetails;
 import com.brovko.notificationservice.service.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +19,11 @@ public class EmailController {
         String status = emailService.sendSimpleMail(details);
 
         return details;
+    }
+
+    @RabbitListener(queues = Constants.QUEUE)
+    public void consumeMessageFromQueue(EmailDetails emailDetails) {
+        emailService.sendSimpleMail(emailDetails);
     }
 
 
