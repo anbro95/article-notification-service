@@ -33,7 +33,7 @@ public class EmailServiceImpl implements EmailService {
                     = new SimpleMailMessage();
 
             mailMessage.setFrom(sender);
-            mailMessage.setTo(details.getRecipient());
+            mailMessage.setTo(details.getRecipients().get(0));
             mailMessage.setText(details.getMsgBody());
             mailMessage.setSubject(details.getSubject());
 
@@ -44,6 +44,8 @@ public class EmailServiceImpl implements EmailService {
             return "Error while Sending Mail";
         }
     }
+
+
 
     @Override
     public String sendMailWithAttachment(EmailDetails details) {
@@ -56,7 +58,7 @@ public class EmailServiceImpl implements EmailService {
             mimeMessageHelper
                     = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(sender);
-            mimeMessageHelper.setTo(details.getRecipient());
+            mimeMessageHelper.setTo(details.getRecipients().get(0));
             mimeMessageHelper.setText(details.getMsgBody());
             mimeMessageHelper.setSubject(
                     details.getSubject());
@@ -74,6 +76,26 @@ public class EmailServiceImpl implements EmailService {
 
         catch (MessagingException e) {
             return "Error while sending mail!!!";
+        }
+    }
+
+    @Override
+    public String sendEmailToFollowers(EmailDetails details) {
+        try {
+            for (int i = 0; i < details.getRecipients().size(); i++) {
+                SimpleMailMessage mailMessage
+                        = new SimpleMailMessage();
+
+                mailMessage.setFrom(sender);
+                mailMessage.setTo(details.getRecipients().get(i));
+                mailMessage.setText(details.getMsgBody());
+                mailMessage.setSubject(details.getSubject());
+
+                javaMailSender.send(mailMessage);
+            }
+            return "Mails sent successfully";
+        } catch (Exception e) {
+            return "Eror while sending messages";
         }
     }
 }

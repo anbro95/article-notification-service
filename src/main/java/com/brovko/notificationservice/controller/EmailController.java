@@ -13,21 +13,22 @@ public class EmailController {
      private final EmailService emailService;
 
     @PostMapping("/sendMail")
-    public EmailDetails
-    sendMail(@RequestBody EmailDetails details)
-    {
-        String status
-                = emailService.sendSimpleMail(details);
+    public EmailDetails sendMail(@RequestBody EmailDetails details) {
+        String status = emailService.sendSimpleMail(details);
 
         return details;
     }
 
+
+    @PostMapping("/sendMailToFollowers")
+    public EmailDetails sendMailToFollowers(@RequestBody EmailDetails details) {
+        String status = emailService.sendEmailToFollowers(details);
+        return details;
+    }
+
     @PostMapping("/sendMailWithAttachment")
-    public String sendMailWithAttachment(
-            @RequestBody EmailDetails details)
-    {
-        String status
-                = emailService.sendMailWithAttachment(details);
+    public String sendMailWithAttachment(@RequestBody EmailDetails details) {
+        String status = emailService.sendMailWithAttachment(details);
 
         return status;
     }
