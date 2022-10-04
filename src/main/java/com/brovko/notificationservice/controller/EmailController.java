@@ -1,9 +1,9 @@
 package com.brovko.notificationservice.controller;
 
-import com.brovko.notificationservice.messaging.Constants;
 import com.brovko.notificationservice.model.EmailDetails;
 import com.brovko.notificationservice.service.EmailService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,25 +11,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class EmailController {
      private final EmailService emailService;
 
     @PostMapping("/sendMail")
     public EmailDetails sendMail(@RequestBody EmailDetails details) {
-        String status = emailService.sendSimpleMail(details);
-
+        emailService.sendSimpleMail(details);
         return details;
     }
 
-    @RabbitListener(queues = Constants.QUEUE)
+    @RabbitListener(queues = "rabbitmq.queue", id = "listener")
     public void consumeMessageFromQueue(EmailDetails emailDetails) {
+        log.info("Inside rabbit listener");
         emailService.sendSimpleMail(emailDetails);
     }
 
 
     @PostMapping("/sendMailToFollowers")
     public EmailDetails sendMailToFollowers(@RequestBody EmailDetails details) {
-        String status = emailService.sendEmailToFollowers(details);
+        emailService.sendEmailToFollowers(details);
         return details;
     }
 
